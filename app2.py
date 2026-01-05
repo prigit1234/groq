@@ -1,35 +1,30 @@
 import streamlit as st
 from groq import Groq
+from dotenv import load_dotenv
 import os
 
-# Get your API key from environment (Streamlit Secrets)
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+load_dotenv()
 
-# Stop if key is missing
-if not GROQ_API_KEY:
-    st.error("⚠️ GROQ_API_KEY not found! Make sure it is set in Streamlit Secrets.")
+api_key = os.getenv("GROQ_API_KEY")
+if not api_key:
+    st.error("GROQ_API_KEY not found in .env file")
     st.stop()
 
-# Initialize Groq client
-client = Groq(api_key=GROQ_API_KEY)
+client = Groq(api_key=api_key)
 
+st.title("🤖 AI Chatbot (Groq – Free API)")
 
-st.title("🤖 AI Chatbot (Groq Practice App)")
-
-# Text input
 user_input = st.text_input("Ask me anything:")
 
-# Placeholder for response
-response_box = st.empty()
-
-# Button to send message
-if st.button("Send") and user_input:
-    try:
+if st.button("Send"):
+    if user_input:
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            messages=[{"role": "user", "content": user_input}]
+            model="llama-3.1-8b-instant",  # ✅ UPDATED MODEL
+            messages=[
+                {"role": "user", "content": user_input}
+            ]
         )
-        # Display the response
-        response_box.write(response.choices[0].message.content)
-    except Exception as e:
-        response_box.write(f"Error: {e}")
+        st.markdown("**AI Reply:**")
+        st.write(response.choices[0].message.content)
+    else:
+        st.warning("Please type a question")
