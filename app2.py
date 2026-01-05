@@ -1,21 +1,18 @@
 import streamlit as st
 from groq import Groq
 import os
-from dotenv import load_dotenv
 
-# Load environment variables from .env
-load_dotenv()  # make sure .env is in the same folder
-
-# Get your API key from environment
+# Get your API key from environment (Streamlit Secrets)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# DEBUG: Check if the key is loaded
+# Stop if key is missing
 if not GROQ_API_KEY:
-    st.error("⚠️ GROQ_API_KEY not found! Check your .env file.")
+    st.error("⚠️ GROQ_API_KEY not found! Make sure it is set in Streamlit Secrets.")
     st.stop()
 
 # Initialize Groq client
 client = Groq(api_key=GROQ_API_KEY)
+
 
 st.title("🤖 AI Chatbot (Groq Practice App)")
 
